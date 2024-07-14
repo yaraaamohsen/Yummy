@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yummy</title>
+    
+    <!-- link css -->
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-black">
+    <div class="layout">
+        <nav class="sideBar position-fixed vh-100 top-0 d-flex">
+            <div class="p-3 menu vh-100 bg-black text-white d-flex flex-column justify-content-between"
+                style="width: 270px;">
+                <ul class="sidebarMenu list-unstyled">
+                    <li><a id="search" href="#">Search</a></li>
+                    <li><a id="categories" href="#">Categories</a></li>
+                    <li><a id="area" href="#">Area</a></li>
+                    <li><a id="ingredients" href="#">Ingredients</a></li>
+                    <li><a id="contact" href="#">Contact Us</a></li>
+                </ul>
+                <div class="sidebar-footer p-2">
+                    <div class="social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-solid fa-globe"></i></a>
+                    </div>
+                    <p class="mb-0">Copyright Â© 2019 All Rights Reserved.</p>
+                </div>
+            </div>
+            <div class="py-3 sidebar-header bg-white vh-100 d-flex flex-column justify-content-between align-items-center"
+                style="width: 65px;">
+                <img src="images/logo.png" width="60px" class="mx-auto" alt="">
+                <span class="closeBtn d-none     fs-3"><i class="fa-solid fa-x"></i></span>
+                <span class="barsBtn fs-3"><i class="fa-solid fa-bars"></i></span>
+                <div class="">
+                    <i class="fa-solid fa-globe d-block"></i>
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="search row mx-auto py-5 d-none">
+                <div class="col-md-6">
+                    <input class="searchByName col-md-6 text-white form-control px-2" type="text" placeholder="Search By Name">
+                </div>
+                <div class="col-md-6">
+                    <input class="searchByFirstletter col-md-6 text-white form-control px-2" type="text" placeholder="Search By First Letter">
+                </div>
+            </div>
+            <div class="row rowData gy-3 py-5">
+                <div
+                    class="loadingScreen position-fixed top-0 bottom-0 start-0 end-0 justify-content-center align-items-center">
+                    <i class="fa-spin fa-spinner fa-solid text-white fa-7x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- js -->
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/index.js"></script>
+</body>
+
+</html>

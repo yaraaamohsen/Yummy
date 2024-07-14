@@ -1,0 +1,73 @@
+.emoji {
+    font-size: 2em;
+}
+
+nav{
+    left: -270px
+}
+
+.sideBar{
+    z-index: 99999;
+}
+
+.sidebar-header{
+    left: 250px
+}
+
+.closeBtn{
+    cursor: pointer;
+}
+.sidebarMenu li {
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.sidebarMenu li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.social-icons a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+
+.layer{
+    transform: translateY(100%);
+    transition: all 0.5s;
+}
+
+.item:hover .layer{
+    transform: translateY(0);
+}
+
+.loadingScreen{
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.form-control{
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.816);
+
+}
+
+.form-control:focus {   
+    background-color:transparent;
+    color: rgba(255, 255, 255, 0.816);
+}
+
+ input.form-control::placeholder{
+    color: rgba(255, 255, 255, 0.816);
+
+}
+input::-webkit-input-placeholder { 
+    color: rgba(255, 255, 255, 0.816);
+}
+
+ul li{
+    position: relative;
+    top: 150%;
+}
