@@ -1,176 +1,179 @@
 const menuListWidth = $('.menu').outerWidth();
 
-function loading() {
-    $(window).on('load', function () {
-        $('.loadingScreen').fadeOut(1000);
-        $('body').css('overflow', 'visible');
-    })
+function showLoading() {
+    $('.loadingScreen').fadeIn(500);
+    $('body').css('overflow', 'hidden');
+}
+
+function hideLoading() {
+    $('.loadingScreen').fadeOut(500);
+    $('body').css('overflow', 'visible');
 }
 
 function openBtn() {
-    $('nav').animate({ left: '0' }, 1000, function(){
-        $('ul li').eq(0).animate({top :'0'},50, function(){
-            $('ul li').eq(1).animate({top :'0'},100,function(){
-                $('ul li').eq(2).animate({top :'0'},100,function(){
-                    $('ul li').eq(3).animate({top :'0'},100,function(){
-                        $('ul li').eq(4).animate({top :'0'},100)
-                    })
-                })
-            })
-        })
+    $('nav').animate({ left: '0' }, 1000, function() {
+        // for(let i = 0; i < 5 ; i++){
+        //     $('ul li').eq(0).animate({top :'0'},100)
+        // }
+        $('ul li').eq(0).animate({top :'0'},50, function() {
+            $('ul li').eq(1).animate({top :'0'},100, function() {
+                $('ul li').eq(2).animate({top :'0'},100, function() {
+                    $('ul li').eq(3).animate({top :'0'},100, function() {
+                        $('ul li').eq(4).animate({top :'0'},100);
+                    });
+                });
+            });
+        });
     });
     document.querySelector('.closeBtn').classList.remove('d-none');
     document.querySelector('.barsBtn').classList.add('d-none');
 }
 
 function closeBtn() {
-    $('nav').animate({ left: -menuListWidth }, 1500);
+    $('nav').animate({ left: -menuListWidth }, 1000);
     document.querySelector('.closeBtn').classList.add('d-none');
     document.querySelector('.barsBtn').classList.remove('d-none');
+    $('ul li').animate({top :'250%'},500)
 }
 
 $(document).on('click', function () {
-    if ($('nav').css('left') == '0px') { closeBtn(); }
-})
+    if ($('nav').css('left') === '0px') { closeBtn(); }
+});
 
-function hideSearch(){
+function hideSearch() {
     document.querySelector('.search').classList.add('d-none');
 }
 
-$('.barsBtn').on('click', function () { openBtn() })
-$('.closeBtn').on('click', function () { closeBtn() })
+$('.barsBtn').on('click', openBtn);
+$('.closeBtn').on('click', closeBtn);
 
 function display(arr) {
-    if(arr!= null){
+    hideLoading();
+    if (arr !== null) {
         let cartona = '';
         for (let i = 0; i < arr.length; i++) {
             cartona += `
             <div class="col-md-3">
                 <div data-id="${arr[i].idMeal}" class="item overflow-hidden position-relative rounded-3">
-                    <img src="${arr[i].strMealThumb}" class="rounded-3 img-fluid " alt="w-100">
-                    <div
-                        class="layer rounded-3 bg-opacity-50 bg-white position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center">
+                    <img src="${arr[i].strMealThumb}" class="rounded-3 img-fluid" alt="w-100">
+                    <div class="layer rounded-3 bg-opacity-50 bg-white position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center">
                         <p class="mx-2 fs-1 fw-bold ">${arr[i].strMeal}</p>
                     </div>
                 </div>
             </div>
-            `
+            `;
         }
         $('.rowData').removeClass('d-none');
         document.querySelector('.rowData').innerHTML = cartona;
-        console.log('hello');
-        console.log(arr);
-        getId()
+        getId();
     }
 }
 
 async function displayRandom() {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=`);
     let responseResult = await response.json();
     let result = responseResult.meals;
-    console.log(result);
-    display(result)
+    display(result);
     getId();
-    loading();
 }
-displayRandom()
+displayRandom();
 
 async function detailsFetch(mealId) {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
     let result = await response.json();
     let detailsArray = result.meals[0];
-    let cartona = '';
-    cartona += `
+    let cartona = `
             <div class="col-md-4 text-white">
                 <img src="${detailsArray.strMealThumb}" class="w-100 rounded-3" alt="">
                 <h4 class="py-3">${detailsArray.strMeal}</h4>
             </div>
             <div class="col-md-8 text-white">
-                <h2>instructions</h2>
+                <h2>Instructions</h2>
                 <p>${detailsArray.strInstructions}</p>
-                <h3>area: <span>${detailsArray.strArea}</span></h3>
+                <h3>Area: <span>${detailsArray.strArea}</span></h3>
                 <h3>Category: <span>${detailsArray.strCategory}</span></h3>
                 <h3>Recipes:</h3>
                 <ul class="list-unstyled list-inline">
-                `
-                for (let i = 1; i <= 20; i++) {
-                    let ingredient = detailsArray[`strIngredient${i}`];
-                    let measure = detailsArray[`strMeasure${i}`];
-                    if (ingredient && measure !== '') {
-                        cartona += `<li class="btn btn-primary m-2 px-2">${measure} ${ingredient}</li>`;
-                    }}
-                cartona+=`
+    `;
+    for (let i = 1; i <= 20; i++) {
+        let ingredient = detailsArray[`strIngredient${i}`];
+        let measure = detailsArray[`strMeasure${i}`];
+        if (ingredient && measure) {
+            cartona += `<li class="btn btn-primary m-2 px-2">${measure} ${ingredient}</li>`;
+        }
+    }
+    cartona += `
                     </ul>
                     <a href="${detailsArray.strSource}" class="btn btn-success">Source</a>
-                    <a href="${detailsArray.strYoutube}" class="btn btn-danger">Youtube</a>
-                    </div>
-                `
+                    <a href="${detailsArray.strYoutube}" class="btn btn-danger">YouTube</a>
+                </div>
+            `;
     document.querySelector('.rowData').innerHTML = cartona;
-    console.log(detailsArray);
     hideSearch();
+    hideLoading();
     return detailsArray;
 }
 
 function getId() {
     $('.rowData .item').on('click', function () {
         let itemId = $(this).attr('data-id');
-        console.log(itemId);
         detailsFetch(itemId);
-    })
+    });
 }
 
 async function displayCategories() {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/categories.php`);
     let result = await response.json();
     let catArray = result.categories;
-    console.log(catArray);
     let cartona = '';
     for (let i = 0; i < catArray.length; i++) {
         cartona += `
         <div class="col-md-3 text-center">
             <div data-id="${catArray[i].idCategory}" class="item overflow-hidden position-relative rounded-3">
                 <img src="${catArray[i].strCategoryThumb}" class="rounded-3 img-fluid" alt="w-100">
-                <div
-                    class="layer rounded-3 bg-opacity-50 bg-white position-absolute top-0 start-0 bottom-0 end-0 py-2 text-center">
+                <div class="layer rounded-3 bg-opacity-50 bg-white position-absolute top-0 start-0 bottom-0 end-0 py-2 text-center">
                     <h3 class="getCategoryName text-center fs-1 fw-bold">${catArray[i].strCategory}</h3>
                     <p class="px-2">${catArray[i].strCategoryDescription.slice(0, 80)}</p>
                 </div>
             </div>
         </div>
-    `
+    `;
     }
     document.querySelector('.rowData').innerHTML = cartona;
     getCategoryName();
+    hideLoading();
 }
 
 $('#categories').on('click', function () {
     displayCategories();
     closeBtn();
     hideSearch();
-})
+});
 
 async function getCategoryItems(categoryName) {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`);
-    console.log(response);
     let result = await response.json();
     let categoryNameArr = result.meals;
-    console.log(categoryNameArr);
     await display(categoryNameArr);
+    hideLoading();
 }
 
 function getCategoryName() {
     $('.item').on('click', function () {
         let mealname = $(this).find('.getCategoryName').text();
-        console.log(mealname);
         getCategoryItems(mealname);
-    })
+    });
 }
 
 async function displayArea() {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/list.php?a=list`);
     let result = await response.json();
     let areaArray = result.meals;
-    console.log(areaArray);
     let cartona = '';
     for (let i = 0; i < areaArray.length; i++) {
         cartona += `
@@ -180,32 +183,33 @@ async function displayArea() {
                     <h3 class="areaName py-2">${areaArray[i].strArea}</h3>
                 </div>
             </div>
-    `
+        `;
     }
     document.querySelector('.rowData').innerHTML = cartona;
-    getAreaName()
+    getAreaName();
+    hideLoading();
 }
 
 $('#area').on('click', function () {
     closeBtn();
     displayArea();
     hideSearch();
-})
+});
 
 function getAreaName() {
     $('.areaItem').on('click', function () {
         let areaName = $(this).find('.areaName').text();
-        console.log(areaName);
-        getAreaItems(areaName)
-    })
+        getAreaItems(areaName);
+    });
 }
 
 async function getAreaItems(area) {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
     let result = await response.json();
     let areaArr = result.meals;
-    console.log(areaArr);
-    display(areaArr)
+    display(areaArr);
+    hideLoading();
 }
 
 $('#ingredients').on('click', function () {
@@ -215,10 +219,11 @@ $('#ingredients').on('click', function () {
 })
 
 async function displayIngredients() {
+    showLoading()
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/list.php?i=list`);
     let result = await response.json();
     let ingArray = result.meals;
-    console.log(ingArray);
+    // console.log(ingArray);
     let cartona = '';
     for (let i = 0; i < ingArray.length; i++) {
         if (ingArray[i].strDescription !== null) {
@@ -234,22 +239,25 @@ async function displayIngredients() {
         }
     }
     document.querySelector('.rowData').innerHTML = cartona;
-    getIngredientName()
+    getIngredientName();
+    hideLoading();
 }
 
 async function getIngredientItems(ingredient) {
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
     let result = await response.json();
     let ingredientArr = result.meals;
-    console.log(ingredientArr);
-    display(ingredientArr)
+    // console.log(ingredientArr);
+    display(ingredientArr);
+    hideLoading();
 }
 
 function getIngredientName() {
     $('.ingredientItem').on('click', function () {
-        console.log('hello');
+        // console.log('hello');
         let ingredientName = $(this).find('.ingredientName').text();
-        console.log(ingredientName);
+        // console.log(ingredientName);
         getIngredientItems(ingredientName)
     })
 }
@@ -270,12 +278,6 @@ function validation(ele) {
         ele.nextElementSibling.classList.remove('d-none');
     };
 }
-
-$('form input').on('input', function () {
-    validation(this);
-    checkIfFormFilledOrNot();
-    hideSearch();
-})
 
 function validate(){
     if ($('.nameAlert').hasClass('d-none') && 
@@ -349,25 +351,34 @@ function displayContact(){
             </form>
     `
     document.querySelector('.rowData').innerHTML = cartona;
+    hideSearch();
+    $('form input').on('input', function () {
+        validation(this);
+        checkIfFormFilledOrNot();
+    })
 }
 
 $('#contact').on('click', function(){
-    displayContact()
+    showLoading();
+    displayContact();
+    hideLoading();
 })
 
 async function search(userInput){
+    showLoading();
     let response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${userInput}`);
     let resultJson = await response.json();
     let result = resultJson.meals;
-    console.log(result);
+    // console.log(result);
     display(result)
+    hideLoading()
 }
 
 function displaySearch(){
     document.querySelector('.search').classList.remove('d-none');
     $('.search input').on('input', function(){
         let userInput = $(this).val();
-        console.log($(this).val());
+        // console.log($(this).val());
         search(userInput);
     })
 }

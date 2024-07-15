@@ -2,6 +2,10 @@
     font-size: 2em;
 }
 
+body{
+    overflow: hidden;
+}
+
 nav{
     left: -270px
 }
@@ -34,7 +38,6 @@ nav{
     font-size: 1.2em;
 }
 
-
 .layer{
     transform: translateY(100%);
     transition: all 0.5s;
@@ -47,11 +50,11 @@ nav{
 .loadingScreen{
     display: flex;
     background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999999;
 }
 .form-control{
     background-color: transparent;
     color: rgba(255, 255, 255, 0.816);
-
 }
 
 .form-control:focus {   
@@ -69,5 +72,5 @@ input::-webkit-input-placeholder {
 
 ul li{
     position: relative;
-    top: 150%;
+    top: 250%;
 }
